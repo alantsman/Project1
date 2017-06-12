@@ -108,17 +108,27 @@ var React = __webpack_require__(0);
 var ReactDOM = __webpack_require__(2);
 var Counter_1 = __webpack_require__(1);
 var myRender;
-var counter = 0;
-var increment = function () {
-    counter = counter + 1;
-    myRender();
+var makeIncrement = function (index) {
+    return function () {
+        counter[index] += 1;
+        myRender();
+    };
 };
-var decrement = function () {
-    counter = counter - 1;
-    myRender();
+var makeDecrement = function (index) {
+    return function () {
+        counter[index] -= 1;
+        myRender();
+    };
 };
-var Main = function () { return React.createElement("div", null,
-    React.createElement(Counter_1.CounterComponent, { counter: counter, increment: increment, decrement: decrement })); };
+var counter = [0, 0, 0, 0];
+var Rows = function () {
+    var r = [];
+    for (var i = 0; i < 4; i++) {
+        r.push(React.createElement(Counter_1.CounterComponent, { counter: counter[i], increment: makeIncrement(i), decrement: makeDecrement(i) }));
+    }
+    return r;
+};
+var Main = function () { return React.createElement("div", null, Rows()); };
 myRender = function () { return ReactDOM.render(React.createElement(Main, null), document.getElementById("example")); };
 myRender();
 
